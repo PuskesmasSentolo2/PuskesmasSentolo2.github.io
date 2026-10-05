@@ -1160,7 +1160,7 @@
     <script>
         const PUSKESMAS_COORDS = { lat: -7.848664, lng: 110.217927 };
         const MAX_ABSENSI_RADIUS_METERS = 70;
-        const DEFAULT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbyRRfl4NJFi0z_bfrJ7kajd6R4gphcRr9MSE7uQeNt9zK9UTV-BxsJQUMbWN5ZRC-4ptw/exec";
+        const DEFAULT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxcFQaHn6FbrgYGqfHTmswpVhqECX-vGSo2l3TIsBWT-xaqowAvr2o25MaNGecK1TGtaA/exec";
 
         const wilayahData = {
             "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso", "Karangwetan", "Kidulan", "Dhisil", "Salam", "Ngrandu"],
