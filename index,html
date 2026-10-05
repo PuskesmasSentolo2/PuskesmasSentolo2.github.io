@@ -133,6 +133,10 @@
                         <i class="fa-solid fa-cubes w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Shortcut Aplikasi</span>
                     </button>
+                    <button onclick="switchTab('ckg')" id="nav-cuti" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-calendar-minus w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">CKG</span>
+                    </button>
 
                     <div id="adminNavGroup" class="pt-3 mt-3 border-t border-slate-100 hidden">
                         <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider sidebar-text">Manajemen Pimpinan</span>
@@ -168,7 +172,7 @@
                         <i class="fa-solid fa-bars"></i>
                     </button>
                     <div>
-                        <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard & Analisa</h2>
+                        <h2 id="pageTitle" class="text-xl font-bold text-slate-800">UPT PUSKESMAS SENTOLO II</h2>
                         <p id="pageSubtitle" class="text-xs text-slate-500">Ringkasan statistik & indikator kinerja Puskesmas Hari Ini</p>
                     </div>
                 </div>
