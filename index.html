@@ -1217,7 +1217,7 @@
             { id: 40, nama: "Anggi Mustika Maylani", jabatan: "Kasir", role: "Staf", username: "anggi", pass: "anggi123", status: "Aktif" },
             { id: 41, nama: "Reda Trilaksana", jabatan: "Jaga Malam", role: "Staf", username: "reda", pass: "reda123", status: "Aktif" }
         ];
-
+       
         let currentPegawaiList = JSON.parse(localStorage.getItem('portal_pegawai_db')) || initialPegawaiData;
         let currentUser = JSON.parse(localStorage.getItem('portal_logged_user')) || null;
         
@@ -2578,9 +2578,7 @@
             }
         }
    
-        // Melengkapi variabel pegawai yang terpotong
-        let currentPegawaiList = JSON.parse(localStorage.getItem('portal_pegawai_db')) || initialPegawaiData;
-
+      
         // Modul Komunikasi Spreadsheet Khusus Perangkat Handphone
         async function sendToSpreadsheet(action, data) {
             const scriptUrl = localStorage.getItem('drive_script_url') || DEFAULT_SPREADSHEET_URL;
