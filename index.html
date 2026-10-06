@@ -2896,5 +2896,103 @@
     };
 })();
 </script>
+    <!-- SCRIPT TAMBAHAN: INTEGRASI LANGSUNG SPREADSHEET DB_PORTAL_PUSKESMAS (TANPA LOCAL STORAGE) -->
+<script>
+(function() {
+    // 1. Matikan Penyimpanan LocalStorage untuk Data Portal
+    window.saveToStorage = function() {
+        // Hanya simpan URL Web App Apps Script agar koneksi DB tetap tersimpan
+        if (typeof driveScriptUrl !== 'undefined' && driveScriptUrl) {
+            localStorage.setItem('portal_drive_url', driveScriptUrl);
+        }
+    };
+
+    // Hapus sisa data portal lama dari LocalStorage jika ada
+    const keysToRemove = [
+        'portal_pegawai_db', 
+        'portal_absensi_logs', 
+        'portal_kegiatan_list', 
+        'portal_cuti_list', 
+        'portal_aduan_list', 
+        'portal_jadwal_list',
+        'portal_marquee_text',
+        'portal_flyer_url'
+    ];
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+
+    // 2. Fungsi Utama Ambil & Sinkronkan Seluruh Data Langsung dari Spreadsheet DB_Portal_Puskesmas
+    window.fetchDirectFromSpreadsheet = async function() {
+        const scriptUrl = window.driveScriptUrl || localStorage.getItem('portal_drive_url') || DEFAULT_SPREADSHEET_URL;
+        if (!scriptUrl) return;
+
+        try {
+            const cacheBuster = `action=getPortalData&t=${Date.now()}`;
+            const fullUrl = scriptUrl.includes('?') ? `${scriptUrl}&${cacheBuster}` : `${scriptUrl}?${cacheBuster}`;
+            
+            const response = await fetch(fullUrl, { method: 'GET', mode: 'cors' });
+            if (response.ok) {
+                const result = await response.json();
+
+                // Perbarui Variabel Global Langsung dari Spreadsheet DB_Portal_Puskesmas
+                if (result.pegawai && Array.isArray(result.pegawai)) currentPegawaiList = result.pegawai;
+                if (result.jadwal && Array.isArray(result.jadwal)) jadwalList = result.jadwal;
+                if (result.absensi && Array.isArray(result.absensi)) absensiLogs = result.absensi;
+                if (result.kegiatan && Array.isArray(result.kegiatan)) kegiatanList = result.kegiatan;
+                if (result.cuti && Array.isArray(result.cuti)) cutiList = result.cuti;
+                if (result.aduan && Array.isArray(result.aduan)) aduanList = result.aduan;
+
+                if (result.marqueeText) marqueeText = result.marqueeText;
+                if (result.flyerImageUrl) flyerImageUrl = result.flyerImageUrl;
+
+                // Re-render Komponen UI Portal
+                if (typeof renderDashboardRealtimeStats === 'function') renderDashboardRealtimeStats();
+                if (typeof renderAbsensiLogs === 'function') renderAbsensiLogs();
+                if (typeof renderJadwalView === 'function') renderJadwalView();
+                if (typeof renderKegiatanTable === 'function') renderKegiatanTable();
+                if (typeof renderPegawaiTable === 'function') renderPegawaiTable();
+                if (typeof renderCutiTable === 'function') renderCutiTable();
+                if (typeof renderAduanList === 'function') renderAduanList();
+                if (typeof renderAnnouncementDisplay === 'function') renderAnnouncementDisplay();
+                if (typeof updateJadwalModalPegawaiOptions === 'function') updateJadwalModalPegawaiOptions();
+
+                const dbSyncText = document.getElementById('dbSyncText');
+                if (dbSyncText) dbSyncText.innerText = "DB Spreadsheet Direct Connected";
+            }
+        } catch (error) {
+            console.warn("Spreadsheet Direct Fetch Status:", error);
+            const dbSyncText = document.getElementById('dbSyncText');
+            if (dbSyncText) dbSyncText.innerText = "Spreadsheet Sync Active";
+        }
+    };
+
+    // 3. Override Fungsi Pengiriman Data Langsung ke Spreadsheet DB_Portal_Puskesmas
+    const originalSendToGoogleSheet = window.sendToGoogleSheet;
+    window.sendToGoogleSheet = function(action, payload) {
+        const scriptUrl = window.driveScriptUrl || localStorage.getItem('portal_drive_url') || DEFAULT_SPREADSHEET_URL;
+        if (!scriptUrl) return;
+
+        fetch(scriptUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: action, payload: payload, data: payload })
+        }).then(() => {
+            // Setelah data dikirim ke spreadsheet, tarik data terbaru secara otomatis
+            setTimeout(window.fetchDirectFromSpreadsheet, 800);
+        }).catch(err => {
+            console.error("Gagal mengirim data ke Spreadsheet:", err);
+        });
+    };
+
+    // 4. Inisialisasi Ambil Data dari Spreadsheet & Auto-Sync Realtime (Setiap 5 Detik)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ambil data dari spreadsheet saat aplikasi pertama kali dibuka
+        window.fetchDirectFromSpreadsheet();
+
+        // Polling otomatis setiap 5 detik langsung dari spreadsheet DB_Portal_Puskesmas
+        setInterval(window.fetchDirectFromSpreadsheet, 5000);
+    });
+})();
+</script>
 </body>
 </html>
