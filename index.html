@@ -2760,5 +2760,141 @@
     });
 })();
 </script>
+    <!-- SCRIPT TAMBAHAN: FITUR HAPUS JADWAL SHIFT KEPADA ADMIN -->
+<script>
+(function() {
+    // 1. Fungsi Hapus Jadwal Pegawai (Khusus Admin / Kepala Puskesmas)
+    window.deleteJadwalItem = function(id) {
+        // Cek Hak Akses Admin / Kepala Puskesmas
+        const canDelete = currentUser && (
+            currentUser.role === 'Admin' || 
+            currentUser.role === 'Kepala Puskesmas' || 
+            (currentUser.username && currentUser.username.toLowerCase() === 'fathimatu')
+        );
+
+        if (!canDelete) {
+            alert('Akses Ditolak! Hanya Admin atau Pimpinan yang memiliki izin untuk menghapus jadwal.');
+            return;
+        }
+
+        if (confirm('Apakah Anda yakin ingin menghapus jadwal shift kerja ini?')) {
+            // Hapus dari memori lokal
+            jadwalList = jadwalList.filter(item => item.id !== id);
+            
+            // Simpan perubahan ke LocalStorage
+            if (typeof saveToStorage === 'function') {
+                saveToStorage();
+            } else {
+                localStorage.setItem('portal_jadwal_list', JSON.stringify(jadwalList));
+            }
+
+            // Kirim perintah hapus ke DB Google Spreadsheet (DB_Portal_Puskesmas)
+            if (typeof sendToGoogleSheet === 'function') {
+                sendToGoogleSheet('DELETE_JADWAL', { id: id });
+            }
+
+            // Re-render tampilan jadwal
+            if (typeof renderJadwalView === 'function') {
+                renderJadwalView();
+            }
+
+            alert('Jadwal shift berhasil dihapus!');
+        }
+    };
+
+    // 2. Override / Modifikasi renderJadwalView untuk Menampilkan Tombol Hapus Bagi Admin
+    const originalRenderJadwalView = window.renderJadwalView;
+    
+    window.renderJadwalView = function() {
+        // Jalankan fungsi render bawaan lebih dulu
+        if (typeof originalRenderJadwalView === 'function') {
+            originalRenderJadwalView();
+        }
+
+        const isAdmin = currentUser && (
+            currentUser.role === 'Admin' || 
+            currentUser.role === 'Kepala Puskesmas' || 
+            (currentUser.username && currentUser.username.toLowerCase() === 'fathimatu')
+        );
+
+        if (!isAdmin) return;
+
+        const container = document.getElementById('jadwalContainer');
+        if (!container) return;
+
+        const table = container.querySelector('table');
+        if (!table) return;
+
+        // Mode Tampilan Per Bulan: Tambahkan Kolom Aksi Hapus
+        if (jadwalViewMode === 'bulan') {
+            const theadRow = table.querySelector('thead tr');
+            if (theadRow && !theadRow.querySelector('.admin-action-col')) {
+                const th = document.createElement('th');
+                th.className = 'p-3 border-b text-center admin-action-col';
+                th.innerText = 'Aksi (Admin)';
+                theadRow.appendChild(th);
+
+                const tbodyRows = table.querySelectorAll('tbody tr');
+                
+                // Ambil daftar jadwal terfilter sesuai logika bawaan
+                const selectedPeg = document.getElementById('filterJadwalPegawai')?.value || 'ALL';
+                const selectedUnit = document.getElementById('filterJadwalUnit')?.value || 'ALL';
+                const selectedJabatan = document.getElementById('filterJadwalJabatan')?.value || 'ALL';
+
+                let filteredJadwal = jadwalList.filter(j => {
+                    const matchPeg = selectedPeg === 'ALL' || j.pegawai === selectedPeg;
+                    const matchUnit = selectedUnit === 'ALL' || j.unit === selectedUnit;
+                    const pegObj = currentPegawaiList.find(p => p.nama === j.pegawai);
+                    const matchJab = selectedJabatan === 'ALL' || (pegObj && (pegObj.role.includes(selectedJabatan) || pegObj.jabatan.toLowerCase().includes(selectedJabatan.toLowerCase())));
+                    return matchPeg && matchUnit && matchJab;
+                });
+
+                if (jadwalSortType === 'asc') filteredJadwal.sort((a, b) => a.pegawai.localeCompare(b.pegawai));
+                else if (jadwalSortType === 'desc') filteredJadwal.sort((a, b) => b.pegawai.localeCompare(a.pegawai));
+
+                tbodyRows.forEach((tr, index) => {
+                    const item = filteredJadwal[index];
+                    const td = document.createElement('td');
+                    td.className = 'p-3 text-center';
+                    if (item) {
+                        td.innerHTML = `
+                            <button onclick="deleteJadwalItem(${item.id})" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg font-bold text-xs border border-rose-200 transition-all" title="Hapus Jadwal">
+                                <i class="fa-solid fa-trash-can mr-1"></i> Hapus
+                            </button>
+                        `;
+                    } else {
+                        td.innerHTML = '-';
+                    }
+                    tr.appendChild(td);
+                });
+            }
+        } 
+        // Mode Tampilan Per Minggu: Tambahkan Tombol silang (x) di pojok kotak shift
+        else if (jadwalViewMode === 'minggu') {
+            const shiftBoxes = table.querySelectorAll('td div.bg-teal-50');
+            shiftBoxes.forEach(box => {
+                if (!box.querySelector('.btn-delete-shift')) {
+                    box.classList.add('relative', 'group');
+                    const unitName = box.querySelector('span.font-bold')?.innerText;
+                    const shiftName = box.querySelector('span.text-\\[10px\\]')?.innerText;
+                    
+                    const item = jadwalList.find(j => j.unit === unitName && j.shift === shiftName);
+                    if (item) {
+                        const delBtn = document.createElement('button');
+                        delBtn.className = 'btn-delete-shift absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] shadow opacity-0 group-hover:opacity-100 transition-all';
+                        delBtn.title = 'Hapus Shift Ini';
+                        delBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                        delBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            deleteJadwalItem(item.id);
+                        };
+                        box.appendChild(delBtn);
+                    }
+                }
+            });
+        }
+    };
+})();
+</script>
 </body>
 </html>
