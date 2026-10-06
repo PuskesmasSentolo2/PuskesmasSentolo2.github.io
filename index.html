@@ -2633,5 +2633,132 @@
             startRealtimeSync();
         });
 </script>
+    <!-- SCRIPT TAMBAHAN: REALTIME SPREADSHEET SYNC & FILTER JADWAL MODAL -->
+<script>
+(function() {
+    // 1. Fungsi Sinkronisasi Realtime dengan Spreadsheet DB_Portal_Puskesmas
+    async function syncRealtimeSpreadsheetDB() {
+        if (!driveScriptUrl) return;
+        try {
+            const response = await fetch(driveScriptUrl + '?action=getPortalData', { method: 'GET' });
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Simpan & perbarui data dari spreadsheet ke memori & local storage
+                if (result.pegawai && result.pegawai.length > 0) {
+                    currentPegawaiList = result.pegawai;
+                    localStorage.setItem('portal_pegawai_db', JSON.stringify(currentPegawaiList));
+                }
+                if (result.jadwal) {
+                    jadwalList = result.jadwal;
+                    localStorage.setItem('portal_jadwal_list', JSON.stringify(jadwalList));
+                }
+                if (result.absensi) {
+                    absensiLogs = result.absensi;
+                    localStorage.setItem('portal_absensi_logs', JSON.stringify(absensiLogs));
+                }
+                if (result.kegiatan) {
+                    kegiatanList = result.kegiatan;
+                    localStorage.setItem('portal_kegiatan_list', JSON.stringify(kegiatanList));
+                }
+                if (result.cuti) {
+                    cutiList = result.cuti;
+                    localStorage.setItem('portal_cuti_list', JSON.stringify(cutiList));
+                }
+
+                // Re-render otomatis tampilan tabel & modal
+                if (typeof renderJadwalView === 'function') renderJadwalView();
+                if (typeof updateJadwalModalPegawaiOptions === 'function') updateJadwalModalPegawaiOptions();
+                if (typeof renderAbsensiLogs === 'function') renderAbsensiLogs();
+                if (typeof renderKegiatanTable === 'function') renderKegiatanTable();
+                
+                const dbSyncText = document.getElementById('dbSyncText');
+                if (dbSyncText) dbSyncText.innerText = "Spreadsheet Realtime Connected";
+            }
+        } catch (error) {
+            console.warn("Realtime Sync Google Spreadsheet Warning:", error);
+        }
+    }
+
+    // 2. Filter Otomatis Nama Pegawai pada Dropdown Modal "Tambah Jadwal"
+    window.updateJadwalModalPegawaiOptions = function() {
+        const modalSelect = document.getElementById('jadwalModalPegawai');
+        const filterPegawaiEl = document.getElementById('filterJadwalPegawai');
+        const filterJabatanEl = document.getElementById('filterJadwalJabatan');
+
+        if (!modalSelect) return;
+
+        const selectedPegawai = filterPegawaiEl ? filterPegawaiEl.value : 'ALL';
+        const selectedJabatan = filterJabatanEl ? filterJabatanEl.value : 'ALL';
+
+        let filteredList = currentPegawaiList || [];
+
+        // Terapkan filter pegawai
+        if (selectedPegawai !== 'ALL') {
+            filteredList = filteredList.filter(p => p.nama === selectedPegawai || p.id == selectedPegawai);
+        }
+
+        // Terapkan filter jabatan
+        if (selectedJabatan !== 'ALL') {
+            filteredList = filteredList.filter(p => p.role === selectedJabatan || (p.jabatan && p.jabatan.toLowerCase().includes(selectedJabatan.toLowerCase())));
+        }
+
+        // Render ulang isi select option modal
+        modalSelect.innerHTML = '';
+        if (filteredList.length === 0) {
+            modalSelect.innerHTML = '<option value="">-- Tidak Ada Pegawai Terfilter --</option>';
+        } else {
+            filteredList.forEach(pegawai => {
+                const opt = document.createElement('option');
+                opt.value = pegawai.nama;
+                opt.textContent = `${pegawai.nama} (${pegawai.jabatan || pegawai.role})`;
+                modalSelect.appendChild(opt);
+            });
+        }
+    };
+
+    // Hook ke fungsi pemicu Buka Modal Jadwal
+    const originalOpenJadwalModal = window.openJadwalModal;
+    window.openJadwalModal = function(pegawaiNama, tanggal) {
+        if (typeof originalOpenJadwalModal === 'function') {
+            originalOpenJadwalModal(pegawaiNama, tanggal);
+        } else {
+            const modal = document.getElementById('jadwalModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+        window.updateJadwalModalPegawaiOptions();
+        if (pegawaiNama) {
+            const modalSelect = document.getElementById('jadwalModalPegawai');
+            if (modalSelect) modalSelect.value = pegawaiNama;
+        }
+    };
+
+    // 3. Penanganan Event Perubahan Filter Jadwal Shift
+    window.onJadwalFilterChange = function() {
+        window.updateJadwalModalPegawaiOptions();
+        if (typeof renderJadwalView === 'function') {
+            renderJadwalView();
+        }
+    };
+
+    // 4. Inisialisasi Realtime Engine & Auto Sync 5 Detik
+    document.addEventListener('DOMContentLoaded', function() {
+        syncRealtimeSpreadsheetDB();
+        
+        // Polling realtime setiap 5 detik
+        setInterval(syncRealtimeSpreadsheetDB, 5000);
+
+        const filterPegawai = document.getElementById('filterJadwalPegawai');
+        const filterJabatan = document.getElementById('filterJadwalJabatan');
+        const filterUnit = document.getElementById('filterJadwalUnit');
+
+        if (filterPegawai) filterPegawai.addEventListener('change', window.onJadwalFilterChange);
+        if (filterJabatan) filterJabatan.addEventListener('change', window.onJadwalFilterChange);
+        if (filterUnit) filterUnit.addEventListener('change', window.onJadwalFilterChange);
+
+        window.updateJadwalModalPegawaiOptions();
+    });
+})();
+</script>
 </body>
 </html>
