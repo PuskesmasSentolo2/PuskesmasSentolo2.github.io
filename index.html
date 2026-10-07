@@ -2974,50 +2974,6 @@
         fetch(scriptUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: action, payload: payload, data: payload })
-        }).then(() => {
-            // Setelah data dikirim ke spreadsheet, tarik data terbaru secara otomatis
-            setTimeout(window.fetchDirectFromSpreadsheet, 800);
-        }).catch(err => {
-            console.error("Gagal mengirim data ke Spreadsheet:", err);
-        });
-    };
-
-    // 4. Inisialisasi Ambil Data dari Spreadsheet & Auto-Sync Realtime (Setiap 5 Detik)
-    document.addEventListener('DOMContentLoaded', function() {
-        // Ambil data dari spreadsheet saat aplikasi pertama kali dibuka
-        window.fetchDirectFromSpreadsheet();
-
-        // Polling otomatis setiap 5 detik langsung dari spreadsheet DB_Portal_Puskesmas
-        setInterval(window.fetchDirectFromSpreadsheet, 5000);
-    });
-})();
-</script>
-    <!-- SCRIPT REVISI FIX GITHUB.IO TO SPREADSHEET SYNC -->
-<script>
-(function() {
-    // 1. Ganti URL di bawah ini dengan Web App URL Apps Script Anda yang Baru
-    window.DEFAULT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxcFQaHn6FbrgYGqfHTmswpVhqECX-vGSo2l3TIsBWT-xaqowAvr2o25MaNGecK1TGtaA/exec";
-
-    // 2. Override Fungsi Pengiriman Data ke Spreadsheet Khusus GitHub Pages (Tanpa Terblokir CORS)
-    window.sendToGoogleSheet = function(action, payload) {
-        const scriptUrl = window.driveScriptUrl || window.DEFAULT_SPREADSHEET_URL;
-        if (!scriptUrl || scriptUrl.includes("PASANG_URL_WEB_APP")) {
-            console.error("URL Apps Script belum dipasang!");
-            return;
-        }
-
-        const dataToSend = {
-            action: action,
-            payload: payload,
-            data: payload
-        };
-
-        // Menggunakan text/plain agar browser di GitHub Pages melewati pemeriksaan CORS Preflight
-        fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(dataToSend)
         }).then(() => {
@@ -3031,6 +2987,15 @@
             console.error("Gagal mengirim data dari GitHub Pages ke Spreadsheet:", err);
         });
     };
+
+    // 4. Inisialisasi Ambil Data dari Spreadsheet & Auto-Sync Realtime (Setiap 5 Detik)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ambil data dari spreadsheet saat aplikasi pertama kali dibuka
+        window.fetchDirectFromSpreadsheet();
+
+        // Polling otomatis setiap 5 detik langsung dari spreadsheet DB_Portal_Puskesmas
+        setInterval(window.fetchDirectFromSpreadsheet, 5000);
+    });
 })();
 </script>
 </body>
