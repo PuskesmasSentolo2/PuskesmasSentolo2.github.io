@@ -103,15 +103,15 @@
                         <i class="fa-solid fa-chart-pie w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Dashboard & Analisa</span>
                     </button>
-
+                    
+                     <button onclick="window.open('https://script.google.com/macros/s/AKfycbz9JCAyIJpEIgev_lTzNqHMdnOeuJumEOHTdWH4nocwXXNgmlNALfRwveaDjMDZ7sTDdw/exec', '_blank')" id="nav-absensi" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-user-check w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">Jadwal Pegawai (Aktif)</span>
+                        </button>
+                    
                     <button onclick="switchTab('absensi')" id="nav-absensi" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
                         <i class="fa-solid fa-user-check w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Portal Absensi Staf</span>
-                    </button>
-
-                    <button onclick="switchTab('jadwal')" id="nav-jadwal" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
-                        <i class="fa-solid fa-calendar-days w-5 text-center text-teal-600 shrink-0"></i>
-                        <span class="sidebar-text truncate">Jadwal Pegawai</span>
                     </button>
 
                     <button onclick="switchTab('kegiatan')" id="nav-kegiatan" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
@@ -133,11 +133,17 @@
                         <i class="fa-solid fa-cubes w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Shortcut Aplikasi</span>
                     </button>
+                    
                     <button onclick="switchTab('ckg')" id="nav-cuti" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
                         <i class="fa-solid fa-calendar-minus w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">CKG</span>
                     </button>
 
+                    <button onclick="switchTab('jadwal')" id="nav-jadwal" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-calendar-days w-5 text-center text-teal-600 shrink-0"></i>
+                        <span class="sidebar-text truncate">Jadwal Pegawai (Tidak Dipakai)</span>
+                    </button>
+                    
                     <div id="adminNavGroup" class="pt-3 mt-3 border-t border-slate-100 hidden">
                         <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider sidebar-text">Manajemen Pimpinan</span>
                         <button onclick="switchTab('pegawai')" id="nav-pegawai" class="w-full flex items-center gap-3 px-3.5 py-2.5 mt-1 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
@@ -781,7 +787,38 @@
 
                 <!-- 8. TAB SHORTCUT APLIKASI (LENGKAP) -->
                 <section id="tab-links" class="space-y-8 hidden">
-                    
+                     <!-- KATEGORI : INTERNAL PUSKESMAS -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-500"></i> Portal INTERNAL PUSKESMAS
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <a href="https://linktr.ee/SKRINING_SendaKU" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-id-card-clip"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SKRINING ILP</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">ILP PUSKESMAS SENTOLO II.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a> 
+
+                            <a href="https://linktr.ee/ILP_Kunjungan_Rumah" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-id-card-clip"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SKRINING ILP KUNJUNGAN RUMAH</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">ILP PUSKESMAS SENTOLO II.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a> 
+
+                             <a href="https://linktr.ee/Puskesmas_Sentolo_II" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-id-card-clip"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">MEDIA SOSIAL</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">ALAMAT MEDIA SOSIAL PUSKESMAS SENTOLO II.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a> 
                     <!-- KATEGORI A: UTAMA & REKAM MEDIS -->
                     <div>
                         <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
@@ -962,8 +999,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             <a href="https://dinkes.kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
                                 <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">E-LING KU</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Elektronik Lingkungan Kulon Progo.</p>
+                                    <h4 class="font-bold text-slate-800 text-xs">DINKES KP</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Website Dinas Kesehatan Kulon Progo.</p>
                                 </div>
                                 <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Dinkes <i class="fa-solid fa-external-link text-[9px]"></i></span>
                             </a>
