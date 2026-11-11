@@ -2526,55 +2526,5 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 </script>
-<script>
-// Fungsi untuk inisialisasi dan mengubah tema
-function applyTheme(isDark) {
-    const lightIcon = document.getElementById('theme-toggle-light-icon');
-    const darkIcon = document.getElementById('theme-toggle-dark-icon');
-    const textElement = document.getElementById('theme-toggle-text');
-
-    if (isDark) {
-        document.documentElement.classList.add('dark');
-        if (lightIcon) lightIcon.classList.remove('hidden');
-        if (darkIcon) darkIcon.classList.add('hidden');
-        if (textElement) textElement.innerText = "Mode Gelap";
-        localStorage.setItem('color-theme', 'dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-        if (lightIcon) lightIcon.classList.add('hidden');
-        if (darkIcon) darkIcon.classList.remove('hidden');
-        if (textElement) textElement.innerText = "Mode Terang";
-        localStorage.setItem('color-theme', 'light');
-    }
-}
-
-// Fungsi yang dipanggil saat tombol diklik
-function toggleTheme() {
-    const isDark = !document.documentElement.classList.contains('dark');
-    applyTheme(isDark);
-}
-
-// Jalankan otomatis saat halaman dimuat (Mengecek preferensi tersimpan)
-document.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem('color-theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        applyTheme(true);
-    } else {
-        applyTheme(false);
-    }
-}
-</script>
-
- <!-- Contoh Penggunaan pada Element Body -->
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
-
-    <!-- Contoh Penggunaan pada Card/Panel -->
-    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/20 shadow-md dark:shadow-[0_0_15px_rgba(6,182,212,0.15)] transition-all">
-        <h2 class="text-lg font-semibold text-slate-800 dark:text-cyan-300">Jadwal Pegawai</h2>
-        <p class="text-slate-600 dark:text-slate-400">Panel kontrol aplikasi.</p>
-    </div>
-
 </body>                   
 </html>
