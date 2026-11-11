@@ -34,6 +34,24 @@
             th { background-color: #f0f0f0 !important; font-weight: bold; }
         }
     </style>
+    <style>
+    /* Efek Glow Futuristik untuk Dark Mode */
+    .dark .futuristic-card {
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+        backdrop-filter: blur(12px);
+    }
+    
+    .dark .futuristic-btn {
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .dark .futuristic-btn:hover {
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+    }
+</style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50">
 
@@ -77,7 +95,15 @@
             </form>
         </div>
     </div>
-
+<!-- Tombol Toggle Gelap/Terang Futuristik -->
+<button id="theme-toggle" onclick="toggleTheme()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border border-slate-300 dark:border-cyan-500/30 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-cyan-400 hover:shadow-lg dark:hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+    <!-- Ikon Matahari (Mode Terang) -->
+    <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-amber-500 hidden text-base"></i>
+    <!-- Ikon Bulan (Mode Gelap) -->
+    <i id="theme-toggle-dark-icon" class="fa-solid fa-moon text-cyan-400 hidden text-base"></i>
+    <!-- Teks Mode -->
+    <span id="theme-toggle-text" class="tracking-wide">Mode Terang</span>
+</button>
     <!-- MAIN APP WRAPPER -->
     <div id="appContainer" class="flex-1 flex overflow-hidden hidden">
         <!-- SIDEBAR -->
@@ -2498,6 +2524,53 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     </script>
-    
+    // Fungsi untuk inisialisasi dan mengubah tema
+function applyTheme(isDark) {
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+    const textElement = document.getElementById('theme-toggle-text');
+
+    if (isDark) {
+        document.documentElement.classList.add('dark');
+        if (lightIcon) lightIcon.classList.remove('hidden');
+        if (darkIcon) darkIcon.classList.add('hidden');
+        if (textElement) textElement.innerText = "Mode Gelap";
+        localStorage.setItem('color-theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+        if (lightIcon) lightIcon.classList.add('hidden');
+        if (darkIcon) darkIcon.classList.remove('hidden');
+        if (textElement) textElement.innerText = "Mode Terang";
+        localStorage.setItem('color-theme', 'light');
+    }
+}
+
+// Fungsi yang dipanggil saat tombol diklik
+function toggleTheme() {
+    const isDark = !document.documentElement.classList.contains('dark');
+    applyTheme(isDark);
+}
+
+// Jalankan otomatis saat halaman dimuat (Mengecek preferensi tersimpan)
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem('color-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        applyTheme(true);
+    } else {
+        applyTheme(false);
+    }
+});
+</body>
+                    <!-- Contoh Penggunaan pada Element Body -->
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+
+    <!-- Contoh Penggunaan pada Card/Panel -->
+    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/20 shadow-md dark:shadow-[0_0_15px_rgba(6,182,212,0.15)] transition-all">
+        <h2 class="text-lg font-semibold text-slate-800 dark:text-cyan-300">Jadwal Pegawai</h2>
+        <p class="text-slate-600 dark:text-slate-400">Panel kontrol aplikasi.</p>
+    </div>
+
 </body>
 </html>
