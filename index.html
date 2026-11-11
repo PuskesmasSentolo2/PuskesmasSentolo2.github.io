@@ -114,15 +114,7 @@
                     <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all" title="Sembunyikan/Munculkan Sidebar">
                         <i id="sidebarToggleIcon" class="fa-solid fa-chevron-left text-xs"></i>
                     </button>
-                    <!-- Tombol Toggle Gelap/Terang Futuristik -->
-<button id="theme-toggle" onclick="toggleTheme()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border border-slate-300 dark:border-cyan-500/30 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-cyan-400 hover:shadow-lg dark:hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-    <!-- Ikon Matahari (Mode Terang) -->
-    <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-amber-500 hidden text-base"></i>
-    <!-- Ikon Bulan (Mode Gelap) -->
-    <i id="theme-toggle-dark-icon" class="fa-solid fa-moon text-cyan-400 hidden text-base"></i>
-    <!-- Teks Mode -->
-    <span id="theme-toggle-text" class="tracking-wide">Mode Terang</span>
-</button>
+                    
                 </div>
 
                 <nav class="p-3 space-y-1">
@@ -229,6 +221,15 @@
                     <button id="btnDriveSettingHeader" onclick="openDriveConfigModal()" class="hidden px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold items-center gap-1.5 transition-all">
                         <i class="fa-solid fa-database text-teal-600"></i>
                         <span>Setting Drive DB</span>
+                    </button>
+                        <!-- Tombol Toggle Gelap/Terang Futuristik -->
+                        <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border border-slate-300 dark:border-cyan-500/30 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-cyan-400 hover:shadow-lg dark:hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                        <!-- Ikon Matahari (Mode Terang) -->
+                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun text-amber-500 hidden text-base"></i>
+                        <!-- Ikon Bulan (Mode Gelap) -->
+                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon text-cyan-400 hidden text-base"></i>
+                        <!-- Teks Mode -->
+                        <span id="theme-toggle-text" class="tracking-wide">Mode Terang</span>
                     </button>
                 </div>
             </header>
@@ -2525,9 +2526,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     </script>
-    
-</body>
-                 // Fungsi untuk inisialisasi dan mengubah tema
+     // Fungsi untuk inisialisasi dan mengubah tema
 function applyTheme(isDark) {
     const lightIcon = document.getElementById('theme-toggle-light-icon');
     const darkIcon = document.getElementById('theme-toggle-dark-icon');
@@ -2564,14 +2563,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         applyTheme(false);
     }
-});   <!-- Contoh Penggunaan pada Element Body -->
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
-
-    <!-- Contoh Penggunaan pada Card/Panel -->
-    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/20 shadow-md dark:shadow-[0_0_15px_rgba(6,182,212,0.15)] transition-all">
-        <h2 class="text-lg font-semibold text-slate-800 dark:text-cyan-300">Jadwal Pegawai</h2>
-        <p class="text-slate-600 dark:text-slate-400">Panel kontrol aplikasi.</p>
-    </div>
-
+}); 
 </body>
 </html>
